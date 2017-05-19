@@ -8,23 +8,23 @@
 "use strict";
 
 
-if (!window.jscolor) { window.jscolor = (function () {
+if (!window.palettejs) { window.palettejs = (function () {
 
 
-var jsc = {
+var pjs = {
 
 
 	register : function () {
-		jsc.attachDOMReadyEvent(jsc.init);
-		jsc.attachEvent(document, 'mousedown', jsc.onDocumentMouseDown);
-		jsc.attachEvent(document, 'touchstart', jsc.onDocumentTouchStart);
-		jsc.attachEvent(window, 'resize', jsc.onWindowResize);
+		pjs.attachDOMReadyEvent(pjs.init);
+		pjs.attachEvent(document, 'mousedown', pjs.onDocumentMouseDown);
+		pjs.attachEvent(document, 'touchstart', pjs.onDocumentTouchStart);
+		pjs.attachEvent(window, 'resize', pjs.onWindowResize);
 	},
 
 
 	init : function () {
-		if (jsc.jscolor.lookupClass) {
-			jsc.jscolor.installByClassName(jsc.jscolor.lookupClass);
+		if (pjs.palettejs.lookupClass) {
+			pjs.palettejs.installByClassName(pjs.palettejs.lookupClass);
 		}
 	},
 
@@ -34,17 +34,17 @@ var jsc = {
 
 		for (var i = 0; i < elms.length; i += 1) {
 			if (elms[i].type !== undefined && elms[i].type.toLowerCase() == 'color') {
-				if (jsc.isColorAttrSupported) {
+				if (pjs.isColorAttrSupported) {
 					// skip inputs of type 'color' if supported by the browser
 					continue;
 				}
 			}
 			var m;
-			if (!elms[i].jscolor && elms[i].className && (m = elms[i].className.match(matchClass))) {
+			if (!elms[i].palettejs && elms[i].className && (m = elms[i].className.match(matchClass))) {
 				var targetElm = elms[i];
 				var optsStr = null;
 
-				var dataOptions = jsc.getDataAttr(targetElm, 'jscolor');
+				var dataOptions = pjs.getDataAttr(targetElm, 'palettejs');
 				if (dataOptions !== null) {
 					optsStr = dataOptions;
 				} else if (m[4]) {
@@ -56,10 +56,10 @@ var jsc = {
 					try {
 						opts = (new Function ('return (' + optsStr + ')'))();
 					} catch(eParseError) {
-						jsc.warn('Error parsing jscolor options: ' + eParseError + ':\n' + optsStr);
+						pjs.warn('Error parsing palettejs options: ' + eParseError + ':\n' + optsStr);
 					}
 				}
-				targetElm.jscolor = new jsc.jscolor(targetElm, opts);
+				targetElm.palettejs = new pjs.palettejs(targetElm, opts);
 			}
 		}
 	},
@@ -125,21 +125,21 @@ var jsc = {
 
 
 	attachGroupEvent : function (groupName, el, evnt, func) {
-		if (!jsc._attachedGroupEvents.hasOwnProperty(groupName)) {
-			jsc._attachedGroupEvents[groupName] = [];
+		if (!pjs._attachedGroupEvents.hasOwnProperty(groupName)) {
+			pjs._attachedGroupEvents[groupName] = [];
 		}
-		jsc._attachedGroupEvents[groupName].push([el, evnt, func]);
-		jsc.attachEvent(el, evnt, func);
+		pjs._attachedGroupEvents[groupName].push([el, evnt, func]);
+		pjs.attachEvent(el, evnt, func);
 	},
 
 
 	detachGroupEvents : function (groupName) {
-		if (jsc._attachedGroupEvents.hasOwnProperty(groupName)) {
-			for (var i = 0; i < jsc._attachedGroupEvents[groupName].length; i += 1) {
-				var evt = jsc._attachedGroupEvents[groupName][i];
-				jsc.detachEvent(evt[0], evt[1], evt[2]);
+		if (pjs._attachedGroupEvents.hasOwnProperty(groupName)) {
+			for (var i = 0; i < pjs._attachedGroupEvents[groupName].length; i += 1) {
+				var evt = pjs._attachedGroupEvents[groupName][i];
+				pjs.detachEvent(evt[0], evt[1], evt[2]);
 			}
-			delete jsc._attachedGroupEvents[groupName];
+			delete pjs._attachedGroupEvents[groupName];
 		}
 	},
 
@@ -209,17 +209,17 @@ var jsc = {
 	captureTarget : function (target) {
 		// IE
 		if (target.setCapture) {
-			jsc._capturedTarget = target;
-			jsc._capturedTarget.setCapture();
+			pjs._capturedTarget = target;
+			pjs._capturedTarget.setCapture();
 		}
 	},
 
 
 	releaseTarget : function () {
 		// IE
-		if (jsc._capturedTarget) {
-			jsc._capturedTarget.releaseCapture();
-			jsc._capturedTarget = null;
+		if (pjs._capturedTarget) {
+			pjs._capturedTarget.releaseCapture();
+			pjs._capturedTarget = null;
 		}
 	},
 
@@ -257,9 +257,9 @@ var jsc = {
 
 	// The className parameter (str) can contain multiple class names separated by whitespace
 	setClass : function (elm, className) {
-		var classList = jsc.classNameToList(className);
+		var classList = pjs.classNameToList(className);
 		for (var i = 0; i < classList.length; i += 1) {
-			if (!jsc.hasClass(elm, classList[i])) {
+			if (!pjs.hasClass(elm, classList[i])) {
 				elm.className += (elm.className ? ' ' : '') + classList[i];
 			}
 		}
@@ -268,7 +268,7 @@ var jsc = {
 
 	// The className parameter (str) can contain multiple class names separated by whitespace
 	unsetClass : function (elm, className) {
-		var classList = jsc.classNameToList(className);
+		var classList = pjs.classNameToList(className);
 		for (var i = 0; i < classList.length; i += 1) {
 			var repl = new RegExp(
 				'^\\s*' + classList[i] + '\\s*|' +
@@ -315,12 +315,12 @@ var jsc = {
 
 
 	setBorderRadius : function (elm, value) {
-		jsc.setStyle(elm, 'borderRadius', value || '0');
+		pjs.setStyle(elm, 'borderRadius', value || '0');
 	},
 
 
 	setBoxShadow : function (elm, value) {
-		jsc.setStyle(elm, 'boxShadow', value || 'none');
+		pjs.setStyle(elm, 'boxShadow', value || 'none');
 	},
 
 
@@ -330,7 +330,7 @@ var jsc = {
 		x = rect.left;
 		y = rect.top;
 		if (!relativeToViewport) {
-			var viewPos = jsc.getViewPos();
+			var viewPos = pjs.getViewPos();
 			x += viewPos[0];
 			y += viewPos[1];
 		}
@@ -403,24 +403,24 @@ var jsc = {
 
 	redrawPosition : function () {
 
-		if (jsc.picker && jsc.picker.owner) {
-			var thisObj = jsc.picker.owner;
+		if (pjs.picker && pjs.picker.owner) {
+			var thisObj = pjs.picker.owner;
 
 			var tp, vp;
 
 			if (thisObj.fixed) {
 				// Fixed elements are positioned relative to viewport,
 				// therefore we can ignore the scroll offset
-				tp = jsc.getElementPos(thisObj.targetElement, true); // target pos
+				tp = pjs.getElementPos(thisObj.targetElement, true); // target pos
 				vp = [0, 0]; // view pos
 			} else {
-				tp = jsc.getElementPos(thisObj.targetElement); // target pos
-				vp = jsc.getViewPos(); // view pos
+				tp = pjs.getElementPos(thisObj.targetElement); // target pos
+				vp = pjs.getViewPos(); // view pos
 			}
 
-			var ts = jsc.getElementSize(thisObj.targetElement); // target size
-			var vs = jsc.getViewSize(); // view size
-			var ps = jsc.getPickerOuterDims(thisObj); // picker size
+			var ts = pjs.getElementSize(thisObj.targetElement); // target size
+			var vs = pjs.getViewSize(); // view size
+			var ps = pjs.getPickerOuterDims(thisObj); // picker size
 			var a, b, c;
 			switch (thisObj.position.toLowerCase()) {
 				case 'left': a=1; b=0; c=-1; break;
@@ -454,7 +454,7 @@ var jsc = {
 				(pp[0] + ps[0] > tp[0] || pp[0] < tp[0] + ts[0]) &&
 				(pp[1] + ps[1] < tp[1] + ts[1]);
 
-			jsc._drawPosition(thisObj, x, y, positionValue, contractShadow);
+			pjs._drawPosition(thisObj, x, y, positionValue, contractShadow);
 		}
 	},
 
@@ -462,23 +462,23 @@ var jsc = {
 	_drawPosition : function (thisObj, x, y, positionValue, contractShadow) {
 		var vShadow = contractShadow ? 0 : thisObj.shadowBlur; // px
 
-		jsc.picker.wrap.style.position = positionValue;
-		jsc.picker.wrap.style.left = x + 'px';
-		jsc.picker.wrap.style.top = y + 'px';
+		pjs.picker.wrap.style.position = positionValue;
+		pjs.picker.wrap.style.left = x + 'px';
+		pjs.picker.wrap.style.top = y + 'px';
 
-		jsc.setBoxShadow(
-			jsc.picker.boxS,
+		pjs.setBoxShadow(
+			pjs.picker.boxS,
 			thisObj.shadow ?
-				new jsc.BoxShadow(0, vShadow, thisObj.shadowBlur, 0, thisObj.shadowColor) :
+				new pjs.BoxShadow(0, vShadow, thisObj.shadowBlur, 0, thisObj.shadowColor) :
 				null);
 	},
 
 
 	getPickerDims : function (thisObj) {
-		var displaySlider = !!jsc.getSliderComponent(thisObj);
+		var displaySlider = !!pjs.getSliderComponent(thisObj);
 		var dims = [
 			2 * thisObj.insetWidth + 2 * thisObj.padding + thisObj.width +
-				(displaySlider ? 2 * thisObj.insetWidth + jsc.getPadToSliderPadding(thisObj) + thisObj.sliderSize : 0),
+				(displaySlider ? 2 * thisObj.insetWidth + pjs.getPadToSliderPadding(thisObj) + thisObj.sliderSize : 0),
 			2 * thisObj.insetWidth + 2 * thisObj.padding + thisObj.height +
 				(thisObj.closable ? 2 * thisObj.insetWidth + thisObj.padding + thisObj.buttonHeight : 0)
 		];
@@ -487,7 +487,7 @@ var jsc = {
 
 
 	getPickerOuterDims : function (thisObj) {
-		var dims = jsc.getPickerDims(thisObj);
+		var dims = pjs.getPickerDims(thisObj);
 		return [
 			dims[0] + 2 * thisObj.borderWidth,
 			dims[1] + 2 * thisObj.borderWidth
@@ -523,16 +523,16 @@ var jsc = {
 		if (!e) { e = window.event; }
 		var target = e.target || e.srcElement;
 
-		if (target._jscLinkedInstance) {
-			if (target._jscLinkedInstance.showOnClick) {
-				target._jscLinkedInstance.show();
+		if (target._pjsLinkedInstance) {
+			if (target._pjsLinkedInstance.showOnClick) {
+				target._pjsLinkedInstance.show();
 			}
-		} else if (target._jscControlName) {
-			jsc.onControlPointerStart(e, target, target._jscControlName, 'mouse');
+		} else if (target._pjsControlName) {
+			pjs.onControlPointerStart(e, target, target._pjsControlName, 'mouse');
 		} else {
 			// Mouse is outside the picker controls -> hide the color picker!
-			if (jsc.picker && jsc.picker.owner) {
-				jsc.picker.owner.hide();
+			if (pjs.picker && pjs.picker.owner) {
+				pjs.picker.owner.hide();
 			}
 		}
 	},
@@ -542,29 +542,29 @@ var jsc = {
 		if (!e) { e = window.event; }
 		var target = e.target || e.srcElement;
 
-		if (target._jscLinkedInstance) {
-			if (target._jscLinkedInstance.showOnClick) {
-				target._jscLinkedInstance.show();
+		if (target._pjsLinkedInstance) {
+			if (target._pjsLinkedInstance.showOnClick) {
+				target._pjsLinkedInstance.show();
 			}
-		} else if (target._jscControlName) {
-			jsc.onControlPointerStart(e, target, target._jscControlName, 'touch');
+		} else if (target._pjsControlName) {
+			pjs.onControlPointerStart(e, target, target._pjsControlName, 'touch');
 		} else {
-			if (jsc.picker && jsc.picker.owner) {
-				jsc.picker.owner.hide();
+			if (pjs.picker && pjs.picker.owner) {
+				pjs.picker.owner.hide();
 			}
 		}
 	},
 
 
 	onWindowResize : function (e) {
-		jsc.redrawPosition();
+		pjs.redrawPosition();
 	},
 
 
 	onParentScroll : function (e) {
 		// hide the picker when one of the parent elements is scrolled
-		if (jsc.picker && jsc.picker.owner) {
-			jsc.picker.owner.hide();
+		if (pjs.picker && pjs.picker.owner) {
+			pjs.picker.owner.hide();
 		}
 	},
 
@@ -584,16 +584,16 @@ var jsc = {
 
 
 	onControlPointerStart : function (e, target, controlName, pointerType) {
-		var thisObj = target._jscInstance;
+		var thisObj = target._pjsInstance;
 
-		jsc.preventDefault(e);
-		jsc.captureTarget(target);
+		pjs.preventDefault(e);
+		pjs.captureTarget(target);
 
 		var registerDragEvents = function (doc, offset) {
-			jsc.attachGroupEvent('drag', doc, jsc._pointerMoveEvent[pointerType],
-				jsc.onDocumentPointerMove(e, target, controlName, pointerType, offset));
-			jsc.attachGroupEvent('drag', doc, jsc._pointerEndEvent[pointerType],
-				jsc.onDocumentPointerEnd(e, target, controlName, pointerType));
+			pjs.attachGroupEvent('drag', doc, pjs._pointerMoveEvent[pointerType],
+				pjs.onDocumentPointerMove(e, target, controlName, pointerType, offset));
+			pjs.attachGroupEvent('drag', doc, pjs._pointerEndEvent[pointerType],
+				pjs.onDocumentPointerEnd(e, target, controlName, pointerType));
 		};
 
 		registerDragEvents(document, [0, 0]);
@@ -604,9 +604,9 @@ var jsc = {
 			registerDragEvents(window.parent.window.document, ofs);
 		}
 
-		var abs = jsc.getAbsPointerPos(e);
-		var rel = jsc.getRelPointerPos(e);
-		jsc._pointerOrigin = {
+		var abs = pjs.getAbsPointerPos(e);
+		var rel = pjs.getRelPointerPos(e);
+		pjs._pointerOrigin = {
 			x: abs.x - rel.x,
 			y: abs.y - rel.y
 		};
@@ -614,36 +614,36 @@ var jsc = {
 		switch (controlName) {
 		case 'pad':
 			// if the slider is at the bottom, move it up
-			switch (jsc.getSliderComponent(thisObj)) {
+			switch (pjs.getSliderComponent(thisObj)) {
 			case 's': if (thisObj.hsv[1] === 0) { thisObj.fromHSV(null, 100, null); }; break;
 			case 'v': if (thisObj.hsv[2] === 0) { thisObj.fromHSV(null, null, 100); }; break;
 			}
-			jsc.setPad(thisObj, e, 0, 0);
+			pjs.setPad(thisObj, e, 0, 0);
 			break;
 
 		case 'sld':
-			jsc.setSld(thisObj, e, 0);
+			pjs.setSld(thisObj, e, 0);
 			break;
 		}
 
-		jsc.dispatchFineChange(thisObj);
+		pjs.dispatchFineChange(thisObj);
 	},
 
 
 	onDocumentPointerMove : function (e, target, controlName, pointerType, offset) {
 		return function (e) {
-			var thisObj = target._jscInstance;
+			var thisObj = target._pjsInstance;
 			switch (controlName) {
 			case 'pad':
 				if (!e) { e = window.event; }
-				jsc.setPad(thisObj, e, offset[0], offset[1]);
-				jsc.dispatchFineChange(thisObj);
+				pjs.setPad(thisObj, e, offset[0], offset[1]);
+				pjs.dispatchFineChange(thisObj);
 				break;
 
 			case 'sld':
 				if (!e) { e = window.event; }
-				jsc.setSld(thisObj, e, offset[1]);
-				jsc.dispatchFineChange(thisObj);
+				pjs.setSld(thisObj, e, offset[1]);
+				pjs.dispatchFineChange(thisObj);
 				break;
 			}
 		}
@@ -652,21 +652,21 @@ var jsc = {
 
 	onDocumentPointerEnd : function (e, target, controlName, pointerType) {
 		return function (e) {
-			var thisObj = target._jscInstance;
-			jsc.detachGroupEvents('drag');
-			jsc.releaseTarget();
+			var thisObj = target._pjsInstance;
+			pjs.detachGroupEvents('drag');
+			pjs.releaseTarget();
 			// Always dispatch changes after detaching outstanding mouse handlers,
 			// in case some user interaction will occur in user's onchange callback
 			// that would intrude with current mouse events
-			jsc.dispatchChange(thisObj);
+			pjs.dispatchChange(thisObj);
 		};
 	},
 
 
 	dispatchChange : function (thisObj) {
 		if (thisObj.valueElement) {
-			if (jsc.isElementType(thisObj.valueElement, 'input')) {
-				jsc.fireEvent(thisObj.valueElement, 'change');
+			if (pjs.isElementType(thisObj.valueElement, 'input')) {
+				pjs.fireEvent(thisObj.valueElement, 'change');
 			}
 		}
 	},
@@ -686,54 +686,54 @@ var jsc = {
 
 
 	setPad : function (thisObj, e, ofsX, ofsY) {
-		var pointerAbs = jsc.getAbsPointerPos(e);
-		var x = ofsX + pointerAbs.x - jsc._pointerOrigin.x - thisObj.padding - thisObj.insetWidth;
-		var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
+		var pointerAbs = pjs.getAbsPointerPos(e);
+		var x = ofsX + pointerAbs.x - pjs._pointerOrigin.x - thisObj.padding - thisObj.insetWidth;
+		var y = ofsY + pointerAbs.y - pjs._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
 
 		var xVal = x * (360 / (thisObj.width - 1));
 		var yVal = 100 - (y * (100 / (thisObj.height - 1)));
 
-		switch (jsc.getPadYComponent(thisObj)) {
-		case 's': thisObj.fromHSV(xVal, yVal, null, jsc.leaveSld); break;
-		case 'v': thisObj.fromHSV(xVal, null, yVal, jsc.leaveSld); break;
+		switch (pjs.getPadYComponent(thisObj)) {
+		case 's': thisObj.fromHSV(xVal, yVal, null, pjs.leaveSld); break;
+		case 'v': thisObj.fromHSV(xVal, null, yVal, pjs.leaveSld); break;
 		}
 	},
 
 
 	setSld : function (thisObj, e, ofsY) {
-		var pointerAbs = jsc.getAbsPointerPos(e);
-		var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
+		var pointerAbs = pjs.getAbsPointerPos(e);
+		var y = ofsY + pointerAbs.y - pjs._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
 
 		var yVal = 100 - (y * (100 / (thisObj.height - 1)));
 
-		switch (jsc.getSliderComponent(thisObj)) {
-		case 's': thisObj.fromHSV(null, yVal, null, jsc.leavePad); break;
-		case 'v': thisObj.fromHSV(null, null, yVal, jsc.leavePad); break;
+		switch (pjs.getSliderComponent(thisObj)) {
+		case 's': thisObj.fromHSV(null, yVal, null, pjs.leavePad); break;
+		case 'v': thisObj.fromHSV(null, null, yVal, pjs.leavePad); break;
 		}
 	},
 
 
-	_vmlNS : 'jsc_vml_',
-	_vmlCSS : 'jsc_vml_css_',
+	_vmlNS : 'pjs_vml_',
+	_vmlCSS : 'pjs_vml_css_',
 	_vmlReady : false,
 
 
 	initVML : function () {
-		if (!jsc._vmlReady) {
+		if (!pjs._vmlReady) {
 			// init VML namespace
 			var doc = document;
-			if (!doc.namespaces[jsc._vmlNS]) {
-				doc.namespaces.add(jsc._vmlNS, 'urn:schemas-microsoft-com:vml');
+			if (!doc.namespaces[pjs._vmlNS]) {
+				doc.namespaces.add(pjs._vmlNS, 'urn:schemas-microsoft-com:vml');
 			}
-			if (!doc.styleSheets[jsc._vmlCSS]) {
+			if (!doc.styleSheets[pjs._vmlCSS]) {
 				var tags = ['shape', 'shapetype', 'group', 'background', 'path', 'formulas', 'handles', 'fill', 'stroke', 'shadow', 'textbox', 'textpath', 'imagedata', 'line', 'polyline', 'curve', 'rect', 'roundrect', 'oval', 'arc', 'image'];
 				var ss = doc.createStyleSheet();
-				ss.owningElement.id = jsc._vmlCSS;
+				ss.owningElement.id = pjs._vmlCSS;
 				for (var i = 0; i < tags.length; i += 1) {
-					ss.addRule(jsc._vmlNS + '\\:' + tags[i], 'behavior:url(#default#VML);');
+					ss.addRule(pjs._vmlNS + '\\:' + tags[i], 'behavior:url(#default#VML);');
 				}
 			}
-			jsc._vmlReady = true;
+			pjs._vmlReady = true;
 		}
 	},
 
@@ -745,7 +745,7 @@ var jsc = {
 			draw: null
 		};
 
-		if (jsc.isCanvasSupported) {
+		if (pjs.isCanvasSupported) {
 			// Canvas implementation for modern browsers
 
 			var canvas = document.createElement('canvas');
@@ -790,19 +790,19 @@ var jsc = {
 		} else {
 			// VML fallback for IE 7 and 8
 
-			jsc.initVML();
+			pjs.initVML();
 
 			var vmlContainer = document.createElement('div');
 			vmlContainer.style.position = 'relative';
 			vmlContainer.style.overflow = 'hidden';
 
-			var hGrad = document.createElement(jsc._vmlNS + ':fill');
+			var hGrad = document.createElement(pjs._vmlNS + ':fill');
 			hGrad.type = 'gradient';
 			hGrad.method = 'linear';
 			hGrad.angle = '90';
 			hGrad.colors = '16.67% #F0F, 33.33% #00F, 50% #0FF, 66.67% #0F0, 83.33% #FF0'
 
-			var hRect = document.createElement(jsc._vmlNS + ':rect');
+			var hRect = document.createElement(pjs._vmlNS + ':rect');
 			hRect.style.position = 'absolute';
 			hRect.style.left = -1 + 'px';
 			hRect.style.top = -1 + 'px';
@@ -810,13 +810,13 @@ var jsc = {
 			hRect.appendChild(hGrad);
 			vmlContainer.appendChild(hRect);
 
-			var vGrad = document.createElement(jsc._vmlNS + ':fill');
+			var vGrad = document.createElement(pjs._vmlNS + ':fill');
 			vGrad.type = 'gradient';
 			vGrad.method = 'linear';
 			vGrad.angle = '180';
 			vGrad.opacity = '0';
 
-			var vRect = document.createElement(jsc._vmlNS + ':rect');
+			var vRect = document.createElement(pjs._vmlNS + ':rect');
 			vRect.style.position = 'absolute';
 			vRect.style.left = -1 + 'px';
 			vRect.style.top = -1 + 'px';
@@ -865,7 +865,7 @@ var jsc = {
 			draw: null
 		};
 
-		if (jsc.isCanvasSupported) {
+		if (pjs.isCanvasSupported) {
 			// Canvas implementation for modern browsers
 
 			var canvas = document.createElement('canvas');
@@ -891,18 +891,18 @@ var jsc = {
 		} else {
 			// VML fallback for IE 7 and 8
 
-			jsc.initVML();
+			pjs.initVML();
 
 			var vmlContainer = document.createElement('div');
 			vmlContainer.style.position = 'relative';
 			vmlContainer.style.overflow = 'hidden';
 
-			var grad = document.createElement(jsc._vmlNS + ':fill');
+			var grad = document.createElement(pjs._vmlNS + ':fill');
 			grad.type = 'gradient';
 			grad.method = 'linear';
 			grad.angle = '180';
 
-			var rect = document.createElement(jsc._vmlNS + ':rect');
+			var rect = document.createElement(pjs._vmlNS + ':rect');
 			rect.style.position = 'absolute';
 			rect.style.left = -1 + 'px';
 			rect.style.top = -1 + 'px';
@@ -965,10 +965,10 @@ var jsc = {
 
 	//
 	// Usage:
-	// var myColor = new jscolor(<targetElement> [, <options>])
+	// var myColor = new palettejs(<targetElement> [, <options>])
 	//
 
-	jscolor : function (targetElement, options) {
+	palettejs : function (targetElement, options) {
 
 		// General options
 		//
@@ -980,7 +980,7 @@ var jsc = {
 		this.hash = false; // whether to prefix the HEX color code with # symbol
 		this.uppercase = true; // whether to uppercase the color code
 		this.onFineChange = null; // called instantly every time the color changes (value can be either a function or a string with javascript code)
-		this.activeClass = 'jscolor-active'; // class to be set to the target element when a picker window is open on it
+		this.activeClass = 'palettejs-active'; // class to be set to the target element when a picker window is open on it
 		this.minS = 0; // min allowed saturation (0 - 100)
 		this.maxS = 100; // max allowed saturation (0 - 100)
 		this.minV = 0; // min allowed value (brightness) (0 - 100)
@@ -1053,24 +1053,24 @@ var jsc = {
 			if (!this.valueElement) {
 				this.exportColor();
 			} else {
-				if (jsc.isElementType(this.valueElement, 'input')) {
+				if (pjs.isElementType(this.valueElement, 'input')) {
 					if (!this.refine) {
-						if (!this.fromString(this.valueElement.value, jsc.leaveValue)) {
+						if (!this.fromString(this.valueElement.value, pjs.leaveValue)) {
 							if (this.styleElement) {
-								this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
-								this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
-								this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
+								this.styleElement.style.backgroundImage = this.styleElement._pjsOrigStyle.backgroundImage;
+								this.styleElement.style.backgroundColor = this.styleElement._pjsOrigStyle.backgroundColor;
+								this.styleElement.style.color = this.styleElement._pjsOrigStyle.color;
 							}
-							this.exportColor(jsc.leaveValue | jsc.leaveStyle);
+							this.exportColor(pjs.leaveValue | pjs.leaveStyle);
 						}
 					} else if (!this.required && /^\s*$/.test(this.valueElement.value)) {
 						this.valueElement.value = '';
 						if (this.styleElement) {
-							this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
-							this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
-							this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
+							this.styleElement.style.backgroundImage = this.styleElement._pjsOrigStyle.backgroundImage;
+							this.styleElement.style.backgroundColor = this.styleElement._pjsOrigStyle.backgroundColor;
+							this.styleElement.style.color = this.styleElement._pjsOrigStyle.color;
 						}
-						this.exportColor(jsc.leaveValue | jsc.leaveStyle);
+						this.exportColor(pjs.leaveValue | pjs.leaveStyle);
 
 					} else if (this.fromString(this.valueElement.value)) {
 						// managed to import color successfully from the value -> OK, don't do anything
@@ -1086,28 +1086,28 @@ var jsc = {
 
 
 		this.exportColor = function (flags) {
-			if (!(flags & jsc.leaveValue) && this.valueElement) {
+			if (!(flags & pjs.leaveValue) && this.valueElement) {
 				var value = this.toString();
 				if (this.uppercase) { value = value.toUpperCase(); }
 				if (this.hash) { value = '#' + value; }
 
-				if (jsc.isElementType(this.valueElement, 'input')) {
+				if (pjs.isElementType(this.valueElement, 'input')) {
 					this.valueElement.value = value;
 				} else {
 					this.valueElement.innerHTML = value;
 				}
 			}
-			if (!(flags & jsc.leaveStyle)) {
+			if (!(flags & pjs.leaveStyle)) {
 				if (this.styleElement) {
 					this.styleElement.style.backgroundImage = 'none';
 					this.styleElement.style.backgroundColor = '#' + this.toString();
 					this.styleElement.style.color = this.isLight() ? '#000' : '#FFF';
 				}
 			}
-			if (!(flags & jsc.leavePad) && isPickerOwner()) {
+			if (!(flags & pjs.leavePad) && isPickerOwner()) {
 				redrawPad();
 			}
-			if (!(flags & jsc.leaveSld) && isPickerOwner()) {
+			if (!(flags & pjs.leaveSld) && isPickerOwner()) {
 				redrawSld();
 			}
 		};
@@ -1288,7 +1288,7 @@ var jsc = {
 				//
 				// Note: In Firefox, getComputedStyle returns null in a hidden iframe,
 				// that's why we need to check if the returned style object is non-empty
-				var currStyle = jsc.getStyle(elm);
+				var currStyle = pjs.getStyle(elm);
 				if (currStyle && currStyle.position.toLowerCase() === 'fixed') {
 					this.fixed = true;
 				}
@@ -1299,12 +1299,12 @@ var jsc = {
 					//
 					// Note: It's not just offsetParents that can be scrollable,
 					// that's why we loop through all parent nodes
-					if (!elm._jscEventsAttached) {
-						jsc.attachEvent(elm, 'scroll', jsc.onParentScroll);
-						elm._jscEventsAttached = true;
+					if (!elm._pjsEventsAttached) {
+						pjs.attachEvent(elm, 'scroll', pjs.onParentScroll);
+						elm._pjsEventsAttached = true;
 					}
 				}
-			} while ((elm = elm.parentNode) && !jsc.isElementType(elm, 'body'));
+			} while ((elm = elm.parentNode) && !pjs.isElementType(elm, 'body'));
 		};
 
 
@@ -1364,9 +1364,9 @@ var jsc = {
 
 
 		function detachPicker () {
-			jsc.unsetClass(THIS.targetElement, THIS.activeClass);
-			jsc.picker.wrap.parentNode.removeChild(jsc.picker.wrap);
-			delete jsc.picker.owner;
+			pjs.unsetClass(THIS.targetElement, THIS.activeClass);
+			pjs.picker.wrap.parentNode.removeChild(pjs.picker.wrap);
+			delete pjs.picker.owner;
 		}
 
 
@@ -1377,8 +1377,8 @@ var jsc = {
 			// or checking their positioning
 			THIS._processParentElementsInDOM();
 
-			if (!jsc.picker) {
-				jsc.picker = {
+			if (!pjs.picker) {
+				pjs.picker = {
 					owner: null,
 					wrap : document.createElement('div'),
 					box : document.createElement('div'),
@@ -1387,7 +1387,7 @@ var jsc = {
 					pad : document.createElement('div'),
 					padB : document.createElement('div'), // border
 					padM : document.createElement('div'), // mouse/touch area
-					padPal : jsc.createPalette(),
+					padPal : pjs.createPalette(),
 					cross : document.createElement('div'),
 					crossBY : document.createElement('div'), // border Y
 					crossBX : document.createElement('div'), // border X
@@ -1396,7 +1396,7 @@ var jsc = {
 					sld : document.createElement('div'),
 					sldB : document.createElement('div'), // border
 					sldM : document.createElement('div'), // mouse/touch area
-					sldGrad : jsc.createSliderGradient(),
+					sldGrad : pjs.createSliderGradient(),
 					sldPtrS : document.createElement('div'), // slider pointer spacer
 					sldPtrIB : document.createElement('div'), // slider pointer inner border
 					sldPtrMB : document.createElement('div'), // slider pointer middle border
@@ -1405,39 +1405,39 @@ var jsc = {
 					btnT : document.createElement('span') // text
 				};
 
-				jsc.picker.pad.appendChild(jsc.picker.padPal.elm);
-				jsc.picker.padB.appendChild(jsc.picker.pad);
-				jsc.picker.cross.appendChild(jsc.picker.crossBY);
-				jsc.picker.cross.appendChild(jsc.picker.crossBX);
-				jsc.picker.cross.appendChild(jsc.picker.crossLY);
-				jsc.picker.cross.appendChild(jsc.picker.crossLX);
-				jsc.picker.padB.appendChild(jsc.picker.cross);
-				jsc.picker.box.appendChild(jsc.picker.padB);
-				jsc.picker.box.appendChild(jsc.picker.padM);
+				pjs.picker.pad.appendChild(pjs.picker.padPal.elm);
+				pjs.picker.padB.appendChild(pjs.picker.pad);
+				pjs.picker.cross.appendChild(pjs.picker.crossBY);
+				pjs.picker.cross.appendChild(pjs.picker.crossBX);
+				pjs.picker.cross.appendChild(pjs.picker.crossLY);
+				pjs.picker.cross.appendChild(pjs.picker.crossLX);
+				pjs.picker.padB.appendChild(pjs.picker.cross);
+				pjs.picker.box.appendChild(pjs.picker.padB);
+				pjs.picker.box.appendChild(pjs.picker.padM);
 
-				jsc.picker.sld.appendChild(jsc.picker.sldGrad.elm);
-				jsc.picker.sldB.appendChild(jsc.picker.sld);
-				jsc.picker.sldB.appendChild(jsc.picker.sldPtrOB);
-				jsc.picker.sldPtrOB.appendChild(jsc.picker.sldPtrMB);
-				jsc.picker.sldPtrMB.appendChild(jsc.picker.sldPtrIB);
-				jsc.picker.sldPtrIB.appendChild(jsc.picker.sldPtrS);
-				jsc.picker.box.appendChild(jsc.picker.sldB);
-				jsc.picker.box.appendChild(jsc.picker.sldM);
+				pjs.picker.sld.appendChild(pjs.picker.sldGrad.elm);
+				pjs.picker.sldB.appendChild(pjs.picker.sld);
+				pjs.picker.sldB.appendChild(pjs.picker.sldPtrOB);
+				pjs.picker.sldPtrOB.appendChild(pjs.picker.sldPtrMB);
+				pjs.picker.sldPtrMB.appendChild(pjs.picker.sldPtrIB);
+				pjs.picker.sldPtrIB.appendChild(pjs.picker.sldPtrS);
+				pjs.picker.box.appendChild(pjs.picker.sldB);
+				pjs.picker.box.appendChild(pjs.picker.sldM);
 
-				jsc.picker.btn.appendChild(jsc.picker.btnT);
-				jsc.picker.box.appendChild(jsc.picker.btn);
+				pjs.picker.btn.appendChild(pjs.picker.btnT);
+				pjs.picker.box.appendChild(pjs.picker.btn);
 
-				jsc.picker.boxB.appendChild(jsc.picker.box);
-				jsc.picker.wrap.appendChild(jsc.picker.boxS);
-				jsc.picker.wrap.appendChild(jsc.picker.boxB);
+				pjs.picker.boxB.appendChild(pjs.picker.box);
+				pjs.picker.wrap.appendChild(pjs.picker.boxS);
+				pjs.picker.wrap.appendChild(pjs.picker.boxB);
 			}
 
-			var p = jsc.picker;
+			var p = pjs.picker;
 
-			var displaySlider = !!jsc.getSliderComponent(THIS);
-			var dims = jsc.getPickerDims(THIS);
+			var displaySlider = !!pjs.getSliderComponent(THIS);
+			var dims = pjs.getPickerDims(THIS);
 			var crossOuterSize = (2 * THIS.pointerBorderWidth + THIS.pointerThickness + 2 * THIS.crossSize);
-			var padToSliderPadding = jsc.getPadToSliderPadding(THIS);
+			var padToSliderPadding = pjs.getPadToSliderPadding(THIS);
 			var borderRadius = Math.min(
 				THIS.borderRadius,
 				Math.round(THIS.padding * Math.PI)); // px
@@ -1458,14 +1458,14 @@ var jsc = {
 			p.boxS.style.top = '0';
 			p.boxS.style.width = '100%';
 			p.boxS.style.height = '100%';
-			jsc.setBorderRadius(p.boxS, borderRadius + 'px');
+			pjs.setBorderRadius(p.boxS, borderRadius + 'px');
 
 			// picker border
 			p.boxB.style.position = 'relative';
 			p.boxB.style.border = THIS.borderWidth + 'px solid';
 			p.boxB.style.borderColor = THIS.borderColor;
 			p.boxB.style.background = THIS.backgroundColor;
-			jsc.setBorderRadius(p.boxB, borderRadius + 'px');
+			pjs.setBorderRadius(p.boxB, borderRadius + 'px');
 
 			// IE hack:
 			// If the element is transparent, IE will trigger the event on the elements under it,
@@ -1473,8 +1473,8 @@ var jsc = {
 			p.padM.style.background =
 			p.sldM.style.background =
 				'#FFF';
-			jsc.setStyle(p.padM, 'opacity', '0');
-			jsc.setStyle(p.sldM, 'opacity', '0');
+			pjs.setStyle(p.padM, 'opacity', '0');
+			pjs.setStyle(p.sldM, 'opacity', '0');
 
 			// pad
 			p.pad.style.position = 'relative';
@@ -1482,7 +1482,7 @@ var jsc = {
 			p.pad.style.height = THIS.height + 'px';
 
 			// pad palettes (HSV and HVS)
-			p.padPal.draw(THIS.width, THIS.height, jsc.getPadYComponent(THIS));
+			p.padPal.draw(THIS.width, THIS.height, pjs.getPadYComponent(THIS));
 
 			// pad border
 			p.padB.style.position = 'absolute';
@@ -1492,8 +1492,8 @@ var jsc = {
 			p.padB.style.borderColor = THIS.insetColor;
 
 			// pad mouse area
-			p.padM._jscInstance = THIS;
-			p.padM._jscControlName = 'pad';
+			p.padM._pjsInstance = THIS;
+			p.padM._pjsControlName = 'pad';
 			p.padM.style.position = 'absolute';
 			p.padM.style.left = '0';
 			p.padM.style.top = '0';
@@ -1567,8 +1567,8 @@ var jsc = {
 			p.sldB.style.borderColor = THIS.insetColor;
 
 			// slider mouse area
-			p.sldM._jscInstance = THIS;
-			p.sldM._jscControlName = 'sld';
+			p.sldM._pjsInstance = THIS;
+			p.sldM._pjsControlName = 'sld';
 			p.sldM.style.display = displaySlider ? 'block' : 'none';
 			p.sldM.style.position = 'absolute';
 			p.sldM.style.right = '0';
@@ -1629,32 +1629,32 @@ var jsc = {
 
 			// If we are changing the owner without first closing the picker,
 			// make sure to first deal with the old owner
-			if (jsc.picker.owner && jsc.picker.owner !== THIS) {
-				jsc.unsetClass(jsc.picker.owner.targetElement, THIS.activeClass);
+			if (pjs.picker.owner && pjs.picker.owner !== THIS) {
+				pjs.unsetClass(pjs.picker.owner.targetElement, THIS.activeClass);
 			}
 
 			// Set the new picker owner
-			jsc.picker.owner = THIS;
+			pjs.picker.owner = THIS;
 
 			// The redrawPosition() method needs picker.owner to be set, that's why we call it here,
 			// after setting the owner
-			if (jsc.isElementType(container, 'body')) {
-				jsc.redrawPosition();
+			if (pjs.isElementType(container, 'body')) {
+				pjs.redrawPosition();
 			} else {
-				jsc._drawPosition(THIS, 0, 0, 'relative', false);
+				pjs._drawPosition(THIS, 0, 0, 'relative', false);
 			}
 
 			if (p.wrap.parentNode != container) {
 				container.appendChild(p.wrap);
 			}
 
-			jsc.setClass(THIS.targetElement, THIS.activeClass);
+			pjs.setClass(THIS.targetElement, THIS.activeClass);
 		}
 
 
 		function redrawPad () {
 			// redraw the pad pointer
-			switch (jsc.getPadYComponent(THIS)) {
+			switch (pjs.getPadYComponent(THIS)) {
 			case 's': var yComponent = 1; break;
 			case 'v': var yComponent = 2; break;
 			}
@@ -1662,11 +1662,11 @@ var jsc = {
 			var y = Math.round((1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1));
 			var crossOuterSize = (2 * THIS.pointerBorderWidth + THIS.pointerThickness + 2 * THIS.crossSize);
 			var ofs = -Math.floor(crossOuterSize / 2);
-			jsc.picker.cross.style.left = (x + ofs) + 'px';
-			jsc.picker.cross.style.top = (y + ofs) + 'px';
+			pjs.picker.cross.style.left = (x + ofs) + 'px';
+			pjs.picker.cross.style.top = (y + ofs) + 'px';
 
 			// redraw the slider
-			switch (jsc.getSliderComponent(THIS)) {
+			switch (pjs.getSliderComponent(THIS)) {
 			case 's':
 				var rgb1 = HSV_RGB(THIS.hsv[0], 100, THIS.hsv[2]);
 				var rgb2 = HSV_RGB(THIS.hsv[0], 0, THIS.hsv[2]);
@@ -1678,7 +1678,7 @@ var jsc = {
 					Math.round(rgb2[0]) + ',' +
 					Math.round(rgb2[1]) + ',' +
 					Math.round(rgb2[2]) + ')';
-				jsc.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
+				pjs.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
 				break;
 			case 'v':
 				var rgb = HSV_RGB(THIS.hsv[0], THIS.hsv[1], 100);
@@ -1687,14 +1687,14 @@ var jsc = {
 					Math.round(rgb[1]) + ',' +
 					Math.round(rgb[2]) + ')';
 				var color2 = '#000';
-				jsc.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
+				pjs.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
 				break;
 			}
 		}
 
 
 		function redrawSld () {
-			var sldComponent = jsc.getSliderComponent(THIS);
+			var sldComponent = pjs.getSliderComponent(THIS);
 			if (sldComponent) {
 				// redraw the slider pointer
 				switch (sldComponent) {
@@ -1702,13 +1702,13 @@ var jsc = {
 				case 'v': var yComponent = 2; break;
 				}
 				var y = Math.round((1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1));
-				jsc.picker.sldPtrOB.style.top = (y - (2 * THIS.pointerBorderWidth + THIS.pointerThickness) - Math.floor(sliderPtrSpace / 2)) + 'px';
+				pjs.picker.sldPtrOB.style.top = (y - (2 * THIS.pointerBorderWidth + THIS.pointerThickness) - Math.floor(sliderPtrSpace / 2)) + 'px';
 			}
 		}
 
 
 		function isPickerOwner () {
-			return jsc.picker && jsc.picker.owner === THIS;
+			return pjs.picker && pjs.picker.owner === THIS;
 		}
 
 
@@ -1724,35 +1724,35 @@ var jsc = {
 			if (elm) {
 				this.targetElement = elm;
 			} else {
-				jsc.warn('Could not find target element with ID \'' + id + '\'');
+				pjs.warn('Could not find target element with ID \'' + id + '\'');
 			}
 		} else if (targetElement) {
 			this.targetElement = targetElement;
 		} else {
-			jsc.warn('Invalid target element: \'' + targetElement + '\'');
+			pjs.warn('Invalid target element: \'' + targetElement + '\'');
 		}
 
-		if (this.targetElement._jscLinkedInstance) {
-			jsc.warn('Cannot link jscolor twice to the same element. Skipping.');
+		if (this.targetElement._pjsLinkedInstance) {
+			pjs.warn('Cannot link palettejs twice to the same element. Skipping.');
 			return;
 		}
-		this.targetElement._jscLinkedInstance = this;
+		this.targetElement._pjsLinkedInstance = this;
 
 		// Find the value element
-		this.valueElement = jsc.fetchElement(this.valueElement);
+		this.valueElement = pjs.fetchElement(this.valueElement);
 		// Find the style element
-		this.styleElement = jsc.fetchElement(this.styleElement);
+		this.styleElement = pjs.fetchElement(this.styleElement);
 
 		var THIS = this;
 		var container =
 			this.container ?
-			jsc.fetchElement(this.container) :
+			pjs.fetchElement(this.container) :
 			document.getElementsByTagName('body')[0];
 		var sliderPtrSpace = 3; // px
 
 		// For BUTTON elements it's important to stop them from sending the form when clicked
 		// (e.g. in Safari)
-		if (jsc.isElementType(this.targetElement, 'button')) {
+		if (pjs.isElementType(this.targetElement, 'button')) {
 			if (this.targetElement.onclick) {
 				var origCallback = this.targetElement.onclick;
 				this.targetElement.onclick = function (evt) {
@@ -1772,7 +1772,7 @@ var jsc = {
 			//
 			// Note: In Firefox, getComputedStyle returns null in a hidden iframe,
 			// that's why we need to check if the returned style object is non-empty
-			var currStyle = jsc.getStyle(elm);
+			var currStyle = pjs.getStyle(elm);
 			if (currStyle && currStyle.position.toLowerCase() === 'fixed') {
 				this.fixed = true;
 			}
@@ -1780,31 +1780,31 @@ var jsc = {
 			if (elm !== this.targetElement) {
 				// attach onParentScroll so that we can recompute the picker position
 				// when one of the offsetParents is scrolled
-				if (!elm._jscEventsAttached) {
-					jsc.attachEvent(elm, 'scroll', jsc.onParentScroll);
-					elm._jscEventsAttached = true;
+				if (!elm._pjsEventsAttached) {
+					pjs.attachEvent(elm, 'scroll', pjs.onParentScroll);
+					elm._pjsEventsAttached = true;
 				}
 			}
-		} while ((elm = elm.offsetParent) && !jsc.isElementType(elm, 'body'));
+		} while ((elm = elm.offsetParent) && !pjs.isElementType(elm, 'body'));
 		*/
 
 		// valueElement
 		if (this.valueElement) {
-			if (jsc.isElementType(this.valueElement, 'input')) {
+			if (pjs.isElementType(this.valueElement, 'input')) {
 				var updateField = function () {
-					THIS.fromString(THIS.valueElement.value, jsc.leaveValue);
-					jsc.dispatchFineChange(THIS);
+					THIS.fromString(THIS.valueElement.value, pjs.leaveValue);
+					pjs.dispatchFineChange(THIS);
 				};
-				jsc.attachEvent(this.valueElement, 'keyup', updateField);
-				jsc.attachEvent(this.valueElement, 'input', updateField);
-				jsc.attachEvent(this.valueElement, 'blur', blurValue);
+				pjs.attachEvent(this.valueElement, 'keyup', updateField);
+				pjs.attachEvent(this.valueElement, 'input', updateField);
+				pjs.attachEvent(this.valueElement, 'blur', blurValue);
 				this.valueElement.setAttribute('autocomplete', 'off');
 			}
 		}
 
 		// styleElement
 		if (this.styleElement) {
-			this.styleElement._jscOrigStyle = {
+			this.styleElement._pjsOrigStyle = {
 				backgroundImage : this.styleElement.style.backgroundImage,
 				backgroundColor : this.styleElement.style.backgroundColor,
 				color : this.styleElement.style.color
@@ -1828,27 +1828,27 @@ var jsc = {
 //================================
 
 
-// By default, search for all elements with class="jscolor" and install a color picker on them.
+// By default, search for all elements with class="palettejs" and install a color picker on them.
 //
-// You can change what class name will be looked for by setting the property jscolor.lookupClass
+// You can change what class name will be looked for by setting the property palettejs.lookupClass
 // anywhere in your HTML document. To completely disable the automatic lookup, set it to null.
 //
-jsc.jscolor.lookupClass = 'jscolor';
+pjs.palettejs.lookupClass = 'palettejs';
 
 
-jsc.jscolor.installByClassName = function (className) {
+pjs.palettejs.installByClassName = function (className) {
 	var inputElms = document.getElementsByTagName('input');
 	var buttonElms = document.getElementsByTagName('button');
 
-	jsc.tryInstallOnElements(inputElms, className);
-	jsc.tryInstallOnElements(buttonElms, className);
+	pjs.tryInstallOnElements(inputElms, className);
+	pjs.tryInstallOnElements(buttonElms, className);
 };
 
 
-jsc.register();
+pjs.register();
 
 
-return jsc.jscolor;
+return pjs.palettejs;
 
 
 })(); }

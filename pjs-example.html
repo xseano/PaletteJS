@@ -4,7 +4,7 @@
 	<title>PaletteJS Examples</title>
 </head>
 <body style="text-align:center;">
-	<script src="../src/palette.js"></script>
+	<script src="src/palette.js"></script>
 
 	<div id="jsonEx">
 
@@ -13,7 +13,7 @@
 		<div id="rJSON" name="rJSON">r: 255</div>
 		<div id="gJSON" name="gJSON">g: 255</div>
 		<div id="bJSON" name="bJSON">b: 255</div>
-		<input class="jscolor {onFineChange:'updateRGBJSON(this)'}" value="FFFFFF">
+		<input class="palettejs {onFineChange:'updateRGBJSON(this)'}" value="FFFFFF">
 
 		<input id="colorInputJSON" type="hidden" name="colorInputJSON" value='{"r":255,"g":255,"b":255}'>
 	</div>
@@ -21,12 +21,22 @@
 	<script>
 
 	function updateRGBJSON(colorObj) {
+
 		document.getElementById('colorInputJSON').value = colorObj.rgbObj();
+		var parsed = JSON.parse(document.getElementById('colorInputJSON').value); // Read the DOM element for the RGB object
+
 		document.getElementById('chosenColorJSON').innerHTML = colorObj.rgbObj();
-		var parsed = JSON.parse(colorObj.rgbObj());
+		document.getElementById('chosenColorJSON').style.color = 'rgb(' + parsed.r + ', ' + parsed.g + ', ' + parsed.b + ')';
+
 		document.getElementById('rJSON').innerHTML = "r: " + parsed.r;
+		document.getElementById('rJSON').style.color = 'rgb(' + parsed.r + ', 0, 0)';
+
 		document.getElementById('gJSON').innerHTML = "g: " + parsed.g;
+		document.getElementById('gJSON').style.color = 'rgb(0, ' + parsed.g + ', 0)';
+
 		document.getElementById('bJSON').innerHTML = "b: " + parsed.b;
+		document.getElementById('bJSON').style.color = 'rgb(0, 0, ' + parsed.b + ')';
+
 	}
 
 	</script>
