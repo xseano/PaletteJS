@@ -1,40 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>jscolor Example</title>
+	<title>PaletteJS Examples</title>
 </head>
 <body style="text-align:center;">
+	<script src="../src/palette.js"></script>
 
+	<div id="jsonEx">
 
+		<h2>Saving RGB JSON object to a readable DOM Element</h2>
+		<div id="chosenColorJSON" name="chosenColorJSON">{"r":255,"g":255,"b":255}</div>
+		<div id="rJSON" name="rJSON">r: 255</div>
+		<div id="gJSON" name="gJSON">g: 255</div>
+		<div id="bJSON" name="bJSON">b: 255</div>
+		<input class="jscolor {onFineChange:'updateRGBJSON(this)'}" value="FFFFFF">
 
-	<script src="jscolor.js"></script>
-
-
-
-	<h2>Example 1</h2>
-	Color: <input class="jscolor" value="ab2567">
-
-
-
-	<h2>Example 2</h2>
-
-	<button class="jscolor {valueElement:'chosen-value', onFineChange:'setTextColor(this)'}">
-		Pick text color
-	</button>
-
-	HEX value: <input id="chosen-value" value="000000">
+		<input id="colorInputJSON" type="hidden" name="colorInputJSON" value='{"r":255,"g":255,"b":255}'>
+	</div>
 
 	<script>
-	function setTextColor(picker) {
-		document.getElementsByTagName('body')[0].style.color = '#' + picker.toString()
+
+	function updateRGBJSON(colorObj) {
+		document.getElementById('colorInputJSON').value = colorObj.rgbObj();
+		document.getElementById('chosenColorJSON').innerHTML = colorObj.rgbObj();
+		var parsed = JSON.parse(colorObj.rgbObj());
+		document.getElementById('rJSON').innerHTML = "r: " + parsed.r;
+		document.getElementById('gJSON').innerHTML = "g: " + parsed.g;
+		document.getElementById('bJSON').innerHTML = "b: " + parsed.b;
 	}
+
 	</script>
-
-
-
-	<p style="margin-top:3em;">Check out <a href="http://jscolor.com/examples/">more examples at jscolor.com</a>!</p>
-
-
 
 </body>
 </html>
