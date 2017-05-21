@@ -1095,10 +1095,10 @@ var pjs = {
 
 					if (this.isLight()) {
 						this.styleElement.style.color = '#000';
-						jsc.unsetClass(this.styleElement, 'dark');
+						pjs.unsetClass(this.styleElement, 'dark');
 					} else {
 						this.styleElement.style.color = '#FFF';
-						jsc.setClass(this.styleElement, 'dark');
+						pjs.setClass(this.styleElement, 'dark');
 					}
 				}
 			}
