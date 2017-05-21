@@ -17,7 +17,6 @@ var pjs = {
 	register : function () {
 		pjs.attachDOMReadyEvent(pjs.init);
 		pjs.attachEvent(document, 'mousedown', pjs.onDocumentMouseDown);
-		pjs.attachEvent(document, 'touchstart', pjs.onDocumentTouchStart);
 		pjs.attachEvent(window, 'resize', pjs.onWindowResize);
 	},
 
@@ -538,20 +537,12 @@ var pjs = {
 	},
 
 
-	onDocumentTouchStart : function (e) {
+	onControlTouchStart : function (e) {
 		if (!e) { e = window.event; }
 		var target = e.target || e.srcElement;
 
-		if (target._pjsLinkedInstance) {
-			if (target._pjsLinkedInstance.showOnClick) {
-				target._pjsLinkedInstance.show();
-			}
-		} else if (target._pjsControlName) {
+		if (target._pjsControlName) {
 			pjs.onControlPointerStart(e, target, target._pjsControlName, 'touch');
-		} else {
-			if (pjs.picker && pjs.picker.owner) {
-				pjs.picker.owner.hide();
-			}
 		}
 	},
 
@@ -1647,6 +1638,8 @@ var pjs = {
 			if (p.wrap.parentNode != container) {
 				container.appendChild(p.wrap);
 			}
+
+			pjs.attachEvent(p.wrap, 'touchstart', pjs.onControlTouchStart);
 
 			pjs.setClass(THIS.targetElement, THIS.activeClass);
 		}
